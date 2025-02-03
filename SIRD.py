@@ -24,17 +24,15 @@ def methode_euler(Beta, Gamma, MU, T, dt, S0, I0, R0, D0,):
     return S, I, R, D
 
 def cost(Beta, Gamma, MU, T, dt, S0, I0, R0, D0):
- data = pd.read_csv("mod-le-pid-miologique-SIRD-\\sird_dataset.csv") 
+ data = pd.read_csv("sird_dataset.csv") 
  SIRD=methode_euler(Beta, Gamma, MU, T, dt, S0, I0, R0, D0)
  New_mse_s= np.mean((S-data["Susceptibles"]) **2)
  New_mse_i=np.mean((I-data["Infectés"])**2)
- New_mse_r=np.mean((R-data["rétablis"])**2)
- New_mse_d=np.mean((D-data["décés"])**2)
+ New_mse_r=np.mean((R-data["Rétablis"])**2)
+ New_mse_d=np.mean((D-data["Décès"])**2)
  M_S_E= (New_mse_s,New_mse_d,New_mse_i,New_mse_r)
+ 
  return New_mse_s,New_mse_i,New_mse_r,New_mse_d
-
-
-
 
 Beta=0.5
 Gamma=0.15
@@ -44,14 +42,18 @@ I0=0.1
 R0=0
 D0=0
 T=50
-dt=0.1
+T = 50  
+dataset_size = 90  
+dt = T / dataset_size  
 
 S,I,R,D=methode_euler(Beta, Gamma, MU, T, dt, S0, I0, R0, D0)
 M_S_E = cost(Beta, Gamma, MU, T, dt, S0, I0, R0, D0)
+
 print("MSE pour les Susceptibles:", M_S_E[0])
 print("MSE pour les Infectés:", M_S_E[1])
 print("MSE pour les Rétablis:", M_S_E[2])
 print("MSE pour les Décès:", M_S_E[3])
+
 
 temps = np.linspace(0, T, len(S))
 
